@@ -51,8 +51,7 @@ module.exports.createUser = (req, res) => {
   })
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
-
-  return res.status(200).send({ message: 'Пользователь успешно создан' });
+  return null;
 };
 
 // PATCH /users/me — обновляет профиль пользователя
