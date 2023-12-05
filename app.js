@@ -23,6 +23,4 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
 
-app.listen(PORT, () => {
-  console.log(`Сервер запущен на порту ${PORT}`);
-});
+app.listen(PORT);

@@ -42,6 +42,7 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar, owner })
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
+  return res.status(200).send({ message: 'Пользователь успешно создан' });
 };
 
 // PATCH /users/me — обновляет профиль пользователя
@@ -59,6 +60,7 @@ module.exports.updateUserProfile = (req, res) => {
   User.findByIdAndUpdate(userId, { name, about }, { new: true })
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
+  return res.status(200).send({ message: 'Профиль пользователя успешно обновлен' });
 };
 
 // PATCH /users/me/avatar — обновляет аватар пользователя
@@ -76,4 +78,5 @@ module.exports.updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(userId, { avatar }, { new: true })
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
+  return res.status(200).send({ message: 'Аватар пользователя успешно обновлен' });
 };
