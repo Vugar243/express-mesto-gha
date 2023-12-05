@@ -3,7 +3,14 @@ const Card = require('../models/card');
 
 // Функция обработки ошибок
 const handleError = (err, res) => {
-  const ERROR_CODE = err.name === 'ValidationError' ? 400 : err.name === 'CastError' ? 404 : 500;
+  let ERROR_CODE;
+  if (err.name === 'ValidationError') {
+    ERROR_CODE = 400;
+  } else if (err.name === 'CastError') {
+    ERROR_CODE = 404;
+  } else {
+    ERROR_CODE = 500;
+  }
   res.status(ERROR_CODE).send({ message: `Ошибка: ${err}` });
 };
 
@@ -27,6 +34,8 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link, owner })
     .then((card) => res.send(card))
     .catch((err) => handleError(err, res));
+
+  return null;
 };
 
 // Контроллер для удаления карточки по ID
@@ -40,6 +49,7 @@ module.exports.deleteCardById = (req, res) => {
       return res.send(card);
     })
     .catch((err) => handleError(err, res));
+  return null;
 };
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
@@ -51,6 +61,7 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => res.send(card))
     .catch((err) => handleError(err, res));
+  return null;
 };
 
 // DELETE /cards/:cardId/likes — убрать лайк с карточки
@@ -62,4 +73,5 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => res.send(card))
     .catch((err) => handleError(err, res));
+  return null;
 };

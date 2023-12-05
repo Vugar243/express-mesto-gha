@@ -3,7 +3,14 @@ const User = require('../models/user');
 
 // Функция обработки ошибок
 const handleError = (err, res) => {
-  const ERROR_CODE = err.name === 'ValidationError' ? 400 : err.name === 'CastError' ? 404 : 500;
+  let ERROR_CODE;
+  if (err.name === 'ValidationError') {
+    ERROR_CODE = 400;
+  } else if (err.name === 'CastError') {
+    ERROR_CODE = 404;
+  } else {
+    ERROR_CODE = 500;
+  }
   res.status(ERROR_CODE).send({ message: `Ошибка: ${err}` });
 };
 
@@ -39,7 +46,9 @@ module.exports.createUser = (req, res) => {
 
   const owner = req.user._id;
 
-  User.create({ name, about, avatar, owner })
+  User.create({
+    name, about, avatar, owner,
+  })
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
 
