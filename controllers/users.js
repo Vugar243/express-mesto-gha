@@ -43,7 +43,6 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
 
-  // Добавленные переносы строк
   return res.status(200).send({ message: 'Пользователь успешно создан' });
 };
 
