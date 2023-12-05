@@ -42,6 +42,7 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar, owner })
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
+
   return res.status(200).send({ message: 'Пользователь успешно создан' });
 };
 
