@@ -10,7 +10,10 @@ const cardSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    required: true,
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: 'Некорректный URL для карточки',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +28,6 @@ const cardSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+}, { versionKey: false }); // Отключение версии схемы
 
 module.exports = mongoose.model('card', cardSchema);

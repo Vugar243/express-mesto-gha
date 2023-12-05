@@ -1,18 +1,6 @@
 // controllers/cards.js
 const Card = require('../models/card');
-
-// Функция обработки ошибок
-const handleError = (err, res) => {
-  let ERROR_CODE;
-  if (err.name === 'ValidationError') {
-    ERROR_CODE = 400;
-  } else if (err.name === 'CastError') {
-    ERROR_CODE = 404;
-  } else {
-    ERROR_CODE = 500;
-  }
-  res.status(ERROR_CODE).send({ message: `Ошибка: ${err}` });
-};
+const handleError = require('../utils/errorHandler');
 
 // Контроллер для получения всех карточек
 module.exports.getCards = (req, res) => {
@@ -32,7 +20,7 @@ module.exports.createCard = (req, res) => {
   }
 
   Card.create({ name, link, owner })
-    .then((card) => res.send(card))
+    .then((card) => res.status(201).send(card))
     .catch((err) => handleError(err, res));
 
   return null;

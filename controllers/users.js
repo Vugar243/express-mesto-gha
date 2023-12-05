@@ -1,18 +1,6 @@
 // controllers/users.js
 const User = require('../models/user');
-
-// Функция обработки ошибок
-const handleError = (err, res) => {
-  let ERROR_CODE;
-  if (err.name === 'ValidationError') {
-    ERROR_CODE = 400;
-  } else if (err.name === 'CastError') {
-    ERROR_CODE = 404;
-  } else {
-    ERROR_CODE = 500;
-  }
-  res.status(ERROR_CODE).send({ message: `Ошибка: ${err}` });
-};
+const handleError = require('../utils/errorHandler');
 
 // Контроллер для получения всех пользователей
 module.exports.getUsers = (req, res) => {
@@ -24,12 +12,9 @@ module.exports.getUsers = (req, res) => {
 // Контроллер для получения пользователя по ID
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
+    .orFail(new Error('User not found'))
     .then((user) => {
-      if (!user) {
-        const ERROR_CODE = 404;
-        return res.status(ERROR_CODE).send({ message: 'Пользователь не найден' });
-      }
-      return res.send(user);
+      res.send(user);
     })
     .catch((err) => handleError(err, res));
 };
@@ -49,7 +34,7 @@ module.exports.createUser = (req, res) => {
   User.create({
     name, about, avatar, owner,
   })
-    .then((user) => res.send(user))
+    .then((user) => res.status(201).send(user))
     .catch((err) => handleError(err, res));
   return null;
 };
@@ -66,10 +51,9 @@ module.exports.updateUserProfile = (req, res) => {
 
   const userId = req.user._id;
 
-  User.findByIdAndUpdate(userId, { name, about }, { new: true })
+  User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
-  return res.status(200).send({ message: 'Профиль пользователя успешно обновлен' });
 };
 
 // PATCH /users/me/avatar — обновляет аватар пользователя
@@ -84,8 +68,7 @@ module.exports.updateUserAvatar = (req, res) => {
 
   const userId = req.user._id;
 
-  User.findByIdAndUpdate(userId, { avatar }, { new: true })
+  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
     .then((user) => res.send(user))
     .catch((err) => handleError(err, res));
-  return res.status(200).send({ message: 'Аватар пользователя успешно обновлен' });
 };
