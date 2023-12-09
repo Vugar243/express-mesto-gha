@@ -1,16 +1,18 @@
 // utils/errorHandler.js
-
 const handleError = (err, res) => {
-  let ERROR_CODE;
+  let statusCode;
 
   if (err.name === 'ValidationError') {
-    ERROR_CODE = 400;
+    statusCode = 400;
   } else if (err.name === 'CastError') {
-    ERROR_CODE = 400;
+    statusCode = 400;
+  } else if (err.code === 11000) {
+    statusCode = 409;
   } else {
-    ERROR_CODE = 500;
+    statusCode = 500;
   }
-  res.status(ERROR_CODE).send({ message: `Ошибка: ${err}` });
+
+  res.status(statusCode).send({ message: `Ошибка: ${err.message || 'Внутренняя ошибка сервера'}` });
 };
 
 module.exports = handleError;

@@ -34,7 +34,7 @@ module.exports.deleteCardById = (req, res) => {
         const ERROR_CODE = 404;
         return res.status(ERROR_CODE).send({ message: 'Карточка не найдена' });
       }
-      return res.send(card);
+      return res.send({ message: 'Пост удалён' });
     })
     .catch((err) => handleError(err, res));
   return null;

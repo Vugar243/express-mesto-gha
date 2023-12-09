@@ -1,5 +1,6 @@
 // models/users.js
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -13,6 +14,20 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Поле "about" должно быть заполнено'],
     minlength: [2, 'Минимальная длина поля "about" - 2'],
     maxlength: [30, 'Максимальная длина поля "about" - 30'],
+  },
+  email: {
+    type: String,
+    required: [true, 'Поле "email" обязательно для заполнения'],
+    unique: true, // Поле email должно быть уникальным
+    validate: {
+      validator: (v) => validator.isEmail(v), // Валидация email с использованием validator
+      message: 'Некорректный формат email',
+    },
+  },
+  password: {
+    type: String,
+    required: [true, 'Поле "password" обязательно для заполнения'],
+    select: false, // Поле password не будет возвращено по умолчанию при запросах
   },
   avatar: {
     type: String,
